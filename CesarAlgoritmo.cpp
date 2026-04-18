@@ -13,6 +13,27 @@ vector<char> getAlfabetoCorrido(const vector<char> &ALF, int clave){
     return aux;
 }
 
+int charEnVector(vector<char> &ALF, char c){
+    int pos = -1;
+    for (int i = 0; i < ALF.size(); i++)
+        if (ALF[i] == c){
+            pos=i;
+            break;
+        }
+    if (pos != -1)
+        return pos;
+    else
+        throw runtime_error ("ERROR! CHAR NO EN EL ALFABETO");
+}
+
+vector<int> indices(vector<char> &ALF, string palabra){
+    vector<int> aux;
+    for(char c: palabra) aux.push_back(charEnVector(ALF,c));
+    return aux;
+}
+
+
+
 int main(int argc, char* argv[]) {
 
 
