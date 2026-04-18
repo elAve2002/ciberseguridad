@@ -26,16 +26,25 @@ int charEnVector(vector<char> &ALF, char c){
         throw runtime_error ("ERROR! CHAR NO EN EL ALFABETO");
 }
 
-vector<int> indices(vector<char> &ALF, string palabra){
-    vector<int> aux;
-    for(char c: palabra) aux.push_back(charEnVector(ALF,c));
-    return aux;
+// es innecesario, lo hago en el mismo cifrar
+// vector<int> indices(vector<char> &ALF, string palabra){
+//     vector<int> aux;
+//     for(char c: palabra) aux.push_back(charEnVector(ALF,c));
+//     return aux;
+// }
+
+string cifrar (vector<char> &ALF_NORMAL, vector<char> &ALF_CIF, string palabra){
+    for(int i=0; i<palabra.size(); i++)
+        palabra[i] = ALF_CIF[charEnVector(ALF_NORMAL, palabra[i])];
+    return palabra;
+}
+
+string descifrar (vector<char> &ALF_NORMAL, vector<char> &ALF_CIF, string palabra){
+    return cifrar(ALF_CIF, ALF_NORMAL, palabra);
 }
 
 
-
 int main(int argc, char* argv[]) {
-
 
     try {
         if (argc < 2) throw runtime_error("Error: falta argumento");
@@ -49,17 +58,17 @@ int main(int argc, char* argv[]) {
 
         int clave = stoi(arg) % alfabetoNormal.size();  //lo normalizo por si se de una clave que sea mayor al tamaño del alfabeto
 
-        for(char c: getAlfabetoCorrido(alfabetoNormal,clave)) cout<<c;
+        vector<char> alfabetoCifrado = getAlfabetoCorrido(alfabetoNormal,clave);
 
+        cout<<"mensaje cifrado:"<<endl;
+
+        if (argc > 2)
+            for (int i = 2; i < argc; i++)
+                cout<<descifrar(alfabetoNormal,alfabetoCifrado,argv[i])<<" ";
         cout<<endl;
+        
     } catch (const runtime_error& e) {
         cerr << "Se produjo una excepción: " << e.what() << endl;
-    }
-
-    cout << "Número de argumentos: " << argc << endl;
-
-    for (int i = 0; i < argc; i++) {
-        cout << "Argumento " << i << ": " << argv[i] << endl;
     }
 
     return 0;
