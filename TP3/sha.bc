@@ -1,0 +1,149 @@
+/* $Id: rsa.bc,v 1.7 2018/10/01 01:45:06 hcurti Exp $
+ *
+ * Copyright © 2014-2024 Hugo J. Curti
+ *
+ * Distributed under the terms of the GNU General Public License version 3.
+ *
+ * Funciones varias para probar el algoritmo asimétrico RSA.
+ * 
+ * m_e_mod_n( m , e , n )     calcula m^e mod n de manera eficiente.
+ *
+ * esprimo( n )               prueba de primalidad. Es segura, pero no es
+ *                            polimonial.
+ *
+ * buscarprimo( n )           busca el primer número primo mayor que n.
+ *
+ * buscarprimomenor( n )      busca el primer número primo menor que n.
+ *
+ * posibleprimo( n )          testeo de primalidad de Fermat. Es bastante seguro
+ *                            y responde polinomialmente.
+ * buscarposibleprimo( n )    igual que buscarprimo, pero usando el testeo de
+ *                            primalidad de fermat.
+ * buscarposibleprimomenor( n ) igual que buscarprimomenor, pero usando el
+ *                              testeo de primalidad de fermat.
+ * calculard( e , nprima )    utiliza el algoritmo extendido de Euclides para
+ *                            calcular el inverso multiplicativo de e sobre
+ *                            nprima (o sea la clave secreta d del algoritmo
+ *                            rsa).
+ *
+ * mcd( a , b )               Calcula el máximo común divisor entre a y b usando
+ *                            el algoritmo de Euclides clásico.
+ *
+ * rsa( p , q , e )           Calcula los valores de n y d para dos números
+ *                            primos p y q y un exponente e (normalmente se usa
+ *                            en las implementaciones modernas el número 65537
+ *                            para e). 
+ */
+
+define m_e_mod_n( m , e , n ) {
+  auto c , i , le , ae[] ;
+  le = 0
+  while( e > 0 ) {
+    ae[le] = e % 2
+    e = e / 2
+    le = le + 1
+  }
+  c = 1
+  for( i = (le-1) ; i >=0 ; i-- ) {
+    c = ( c * c ) % n
+    if( ae[i] ) {
+      c = ( c * m ) % n
+    }
+  }
+  return c
+}
+
+define esprimo( n ) {
+    auto i;
+
+    if( n <= 3 ) return (n > 1)
+
+    if( n % 2 == 0 || n % 3 == 0 ) return 0
+
+    for( i = 5 ; i * i <= n ; i += 6 )
+      if (n % i == 0 || n % (i + 2) == 0 ) return 0
+
+    return 1
+}
+
+define buscarprimo( n ) {
+  while( ! esprimo( n ) ) n += 1
+  return n
+}
+
+define buscarprimomenor( n ) {
+  while( ! esprimo( n ) ) n -= 1
+  return n
+}
+
+define posibleprimo( n ) {
+  return m_e_mod_n(  2 , n - 1 , n ) == 1 && \
+         m_e_mod_n(  3 , n - 1 , n ) == 1 && \
+         m_e_mod_n(  5 , n - 1 , n ) == 1 && \
+         m_e_mod_n(  7 , n - 1 , n ) == 1 && \
+         m_e_mod_n( 11 , n - 1 , n ) == 1 && \
+         m_e_mod_n( 13 , n - 1 , n ) == 1 && \
+         m_e_mod_n( 17 , n - 1 , n ) == 1 && \
+         m_e_mod_n( 19 , n - 1 , n ) == 1 && \
+         m_e_mod_n( 23 , n - 1 , n ) == 1
+}
+
+define buscarposibleprimo( n ) {
+  while( ! posibleprimo( n ) ) n += 1
+  return n
+}
+
+define buscarposibleprimomenor( n ) {
+  while( ! posibleprimo( n ) ) n -= 1
+  return n
+}
+
+define calculard( e , nprima ) {
+  auto r0 , r1 , s0 , s1 , t0 , t1 , r2 , s2 , t2 , qu
+  r0 = e
+  r1 = nprima
+  s0 = 1
+  s1 = 0
+  t0 = 0
+  t1 = 1
+  while( r1 > 0 ) {
+    qu =  r0 / r1
+    r2 = r0 % r1
+    s2 = s0 - qu * s1
+    t2 = t0 - qu * t1
+    r0 = r1
+    r1 = r2
+    s0 = s1
+    s1 = s2
+    t0 = t1
+    t1 = t2
+  }
+
+  while( s0 < 0 ) s0 += nprima
+
+  return s0
+}
+
+define mcd( a , b ) {
+  if( ! b ) {
+    return a
+  } else {
+    return mcd( b , a % b )
+  }
+}
+
+define rsa( p , q , e ) {
+  auto nprima , ve
+  print "n = "
+  p*q
+  nprima = (p - 1) * (q - 1)
+  print "nprima = "
+  nprima
+  print "e = "
+  e
+  ve = mcd( e , nprima )
+  print "mcd( e , nprima ) = " , ve
+  if( ve == 1 ) print " Ok!\n" else print " ERROR\n"
+  print "d = "
+  return calculard( e , nprima )
+}
