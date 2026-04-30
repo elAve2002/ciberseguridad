@@ -45,26 +45,19 @@ string cifrar(const vector<int> &palabra, const vector<int> &clave, const vector
 string descifrar(const vector<int> &palabra, const vector<int> &clave, const vector<vector<char>> &matVigenere){
     string descifrado;
     int valClave = 0;
-
-    cout<<palabra.size()<<endl;
-        
     for (size_t i = 0; i < palabra.size(); i++){
         int columna = -1;
-
         for(int j =0; j<matVigenere[0].size();j++){
             if (matVigenere[palabra[i]][0] == matVigenere[clave[valClave]][j]){
                 columna = j;
                 break;
             }
         }
-
         descifrado += matVigenere[0][columna];
         valClave ++;
-
         if(valClave >= clave.size()) 
             valClave = 0;
     }
-
     return descifrado;
 }
 
@@ -88,18 +81,14 @@ int main(int argc,char* argv[]){
         vector<vector<char>> matVigenere;
         for (int i=0; i< alfabetoNormal.size(); i++)
             matVigenere.push_back(getAlfabetoCorrido(alfabetoNormal,i));
-
         if(string(argv[3]) == "0"){
-            string menCif = cifrar(getPos(argv[2]),getPos(argv[1]), matVigenere);
-            cout<<"el mensaje "<<argv[2]<<" cifrado es: "<<menCif<<endl;
+            cout<<cifrar(getPos(argv[2]),getPos(argv[1]), matVigenere);
         }else{
-            string menDescif = descifrar(getPos(argv[2]),getPos(argv[1]), matVigenere);
-            cout<<"el mensaje "<<argv[2]<<" descifrado es: "<<menDescif<<endl;
+            cout<<descifrar(getPos(argv[2]),getPos(argv[1]), matVigenere);
         }
-
+        return 0;
     } catch (const runtime_error& e) {
-        cerr << "Se produjo una excepción: " << e.what() << endl;
+        cerr << e.what() << endl; // Los errores van a stderr, Bash los ignora al asignar
+        return 1;
     }
-
-    return 0;
 }
