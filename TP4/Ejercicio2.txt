@@ -1,0 +1,5 @@
+natgri@natgri-Escritorio:~/Desktop/ciberseguridad/TP4$ sha1sum -c Ejercicio1.sha1
+Ejercicio1.txt: OK
+
+natgri@natgri-Escritorio:~/Desktop/ciberseguridad/TP4$ md5sum -c Ejercicio1.md5
+Ejercicio1.txt: OK

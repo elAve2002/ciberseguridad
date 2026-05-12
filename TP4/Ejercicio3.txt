@@ -1,0 +1,6 @@
+sha1sum Ejercicio3.txt > Ejercicio3.sha1
+md5sum Ejercicio3.txt > Ejercicio3.md5
+HOLA
+hoLa
+12345
+CiberSeguridad

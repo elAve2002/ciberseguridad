@@ -1,0 +1,9 @@
+Archivo sha1
+
+87711ad07b0acb8ffdcef2284f095928905876c9  Ejercicio1.txt
+8abea4789b27194ec08ee94f5ec92afab6072201  Ejercicio3.txt
+
+Archivo md5
+
+070d79c52b3eed1e7f9c11eb48efeef9  Ejercicio1.txt
+0a09d3509b1049331501c1783f09b286  Ejercicio3.txt
